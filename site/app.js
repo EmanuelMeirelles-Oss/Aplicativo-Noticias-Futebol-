@@ -46,7 +46,7 @@ categories.forEach(btn => {
 // Fetch and Render Data
 async function loadNewsData() {
     try {
-        const response = await fetch('data.json');
+        const response = await fetch('/api/news');
         if (!response.ok) throw new Error('Data not found');
         
         globalData = await response.json();
@@ -75,6 +75,23 @@ function updateDisplay() {
     renderHistoryNews(history);
 }
 
+function formatNewsDate(dateString) {
+    if (!dateString) return '';
+    try {
+        const d = new Date(dateString);
+        if (isNaN(d.getTime())) return dateString;
+        return d.toLocaleString('pt-BR', { 
+            day: '2-digit', 
+            month: 'short', 
+            year: 'numeric', 
+            hour: '2-digit', 
+            minute: '2-digit' 
+        });
+    } catch(e) {
+        return dateString;
+    }
+}
+
 function renderCurrentNews(newsArray) {
     const container = document.getElementById('current-news-container');
     container.innerHTML = '';
@@ -100,7 +117,7 @@ function renderCurrentNews(newsArray) {
             <h3>${news.title}</h3>
             <p>${news.description}</p>
             <div class="card-footer">
-                <span class="date">${news.date}</span>
+                <span class="date">${formatNewsDate(news.date)}</span>
                 <i data-feather="chevron-right" style="color: var(--accent); width: 18px;"></i>
             </div>
         `;
