@@ -50,7 +50,7 @@ def fetch_rss(url, limit=5):
             if len(news_items) >= limit: break
         return news_items
     except Exception as e:
-        return []
+        return [{'title': 'Error Google News', 'description': str(e), 'url': '', 'date': str(datetime.now())}]
 
 def fetch_reddit_posts(subreddit, limit=5):
     url = f"https://www.reddit.com/r/{subreddit}/top.json?limit={limit}&t=day"
@@ -70,7 +70,7 @@ def fetch_reddit_posts(subreddit, limit=5):
                 })
             return posts
     except Exception as e:
-        return []
+        return [{'title': 'Error Reddit', 'description': str(e), 'url': '', 'date': str(datetime.now())}]
 
 def sorted_by_date(items):
     # Simplest approach: leave them as is for UI presentation
