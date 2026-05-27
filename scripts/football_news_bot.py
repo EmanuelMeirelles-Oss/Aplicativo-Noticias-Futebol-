@@ -9,7 +9,7 @@ import logging
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOGS_DIR = os.path.join(BASE_DIR, 'logs')
 TMP_DIR = os.path.join(BASE_DIR, '.tmp')
-SITE_DIR = os.path.join(BASE_DIR, 'site')
+SITE_DIR = os.path.join(BASE_DIR, 'frontend')
 
 os.makedirs(LOGS_DIR, exist_ok=True)
 os.makedirs(TMP_DIR, exist_ok=True)
@@ -62,6 +62,30 @@ def fetch_rss(url, limit=5):
         logger.error(f"Erro ao buscar noticias do RSS: {e}")
         return []
 
+def fetch_reddit_posts(subreddit="futebol", limit=5):
+    logger.info(f"Buscando posts populares do Reddit r/{subreddit}...")
+    url = f"https://www.reddit.com/r/{subreddit}/top.json?limit={limit}&t=day"
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+    req = urllib.request.Request(url, headers=headers)
+    try:
+        with urllib.request.urlopen(req) as response:
+            data = json.loads(response.read().decode('utf-8'))
+            posts = []
+            for child in data.get('data', {}).get('children', []):
+                post = child.get('data', {})
+                posts.append({
+                    'title': post.get('title', 'Reddit Post'),
+                    'score': post.get('score', 0),
+                    'url': f"https://www.reddit.com{post.get('permalink', '')}",
+                    'date': str(datetime.now())
+                })
+            return posts
+    except Exception as e:
+        logger.error(f"Erro ao buscar posts do Reddit: {e}")
+        return []
+
 def fetch_all_news():
     logger.info("Buscando as maiores notícias de futebol do Brasil e do Mundo...")
     
@@ -71,16 +95,18 @@ def fetch_all_news():
 
     world_news = fetch_rss(url_world, 5)
     brazil_news = fetch_rss(url_brazil, 5)
+    reddit_posts = fetch_reddit_posts("futebol", 5)
     
-    logger.info(f"Encontradas {len(world_news)} notícias do mundo e {len(brazil_news)} do Brasil.")
+    logger.info(f"Encontradas {len(world_news)} notícias do mundo, {len(brazil_news)} do Brasil e {len(reddit_posts)} posts do Reddit.")
     
     return {
         "world": world_news,
-        "brazil": brazil_news
+        "brazil": brazil_news,
+        "reddit": reddit_posts
     }
 
 def save_data_json(current_news):
-    logger.info("Atualizando site/data.json...")
+    logger.info("Atualizando frontend/data.json...")
     data_path = os.path.join(SITE_DIR, 'data.json')
     
     # Structure setup
@@ -121,6 +147,7 @@ def save_data_json(current_news):
     # Set new current news
     data["current_world"] = current_news["world"]
     data["current_brazil"] = current_news["brazil"]
+    data["reddit_posts"] = current_news.get("reddit", [])
     
     # Limit history to ~50 elements
     data["history_world"] = data["history_world"][:50]

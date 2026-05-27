@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zona Mista — futebol sem ruído</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&family=Outfit:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+  <!-- grain / noise overlay -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- Match Ticker -->
+  <div class="ticker-wrap">
+    <div class="ticker-title">ZONA MISTA LIVE</div>
+    <div class="ticker">
+      <div class="ticker-item">🏆 LIBERTADORES: Palmeiras 1 × 1 Flamengo (Encerrado)</div>
+      <div class="ticker-item">🇪🇸 LALIGA: Real Madrid 3 × 1 Barcelona (Encerrado)</div>
+      <div class="ticker-item">🇧🇷 BRASILEIRÃO: São Paulo × Corinthians (Amanhã 16:00)</div>
+      <div class="ticker-item">🇪🇺 CHAMPIONS: Man. City × Real Madrid (Terça 16:00)</div>
+      <div class="ticker-item">🏆 COPA DO BRASIL: Vasco 2 × 1 Atlético-MG (Encerrado)</div>
+      <div class="ticker-item">🏴󠁧󠁢󠁥󠁮󠁧󠁿 PREMIER LEAGUE: Liverpool 2 × 2 Arsenal (Encerrado)</div>
+      <!-- Repetidos para loop contínuo -->
+      <div class="ticker-item">🏆 LIBERTADORES: Palmeiras 1 × 1 Flamengo (Encerrado)</div>
+      <div class="ticker-item">🇪🇸 LALIGA: Real Madrid 3 × 1 Barcelona (Encerrado)</div>
+      <div class="ticker-item">🇧🇷 BRASILEIRÃO: São Paulo × Corinthians (Amanhã 16:00)</div>
+    </div>
+  </div>
+
+  <!-- Top navigation -->
+  <header class="topbar">
+    <a href="#" class="brand">
+      <span class="brand-word">ZONA</span><span class="brand-accent">MISTA</span><span class="brand-dot">.</span>
+    </a>
+
+    <nav class="topnav">
+      <a href="#hoje" class="topnav-link active">Hoje</a>
+      <a href="#resenha" class="topnav-link">Resenha</a>
+      <a href="#arquivo" class="topnav-link">Arquivo</a>
+      <a href="#sobre" class="topnav-link">Sobre</a>
+    </nav>
+
+    <div class="topbar-right">
+      <div class="cat-toggle" role="tablist" aria-label="Categoria">
+        <button class="cat-btn active" data-category="world" role="tab">Mundo</button>
+        <button class="cat-btn" data-category="brazil" role="tab">Brasil</button>
+      </div>
+      <button class="icon-btn" aria-label="Buscar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ─────────── HERO ─────────── -->
+    <section class="hero" id="hero">
+      <div class="hero-left">
+        <div class="hero-date" id="hero-date">—</div>
+
+        <div class="hero-eyebrow">
+          <span class="dot"></span>
+          <span class="eyebrow-text">Manchete · Top 1</span>
+        </div>
+
+        <h1 class="hero-headline" id="hero-headline">Carregando a manchete do dia…</h1>
+
+        <p class="hero-deck">A história que abre a semana. Curada todo dia, sem ruído, sem clickbait — só o que importa antes do apito inicial.</p>
+
+        <div class="hero-meta">
+          <span class="meta-pill" id="hero-source">via curadoria</span>
+          <span class="meta-sep">·</span>
+          <span id="hero-time">—</span>
+        </div>
+
+        <a href="#" class="hero-cta" id="hero-link" target="_blank" rel="noopener">
+          <span>Ler matéria completa</span>
+          <span class="cta-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <div class="hero-right">
+        <figure class="cinematic">
+          <div class="cinematic-tag">Antes do apito</div>
+          <img src="imagem_site_futebol.jpg" alt="Jogador entrando em campo, estádio iluminado à noite" class="cinematic-img">
+          <div class="cinematic-glow" aria-hidden="true"></div>
+          <div class="cinematic-vignette" aria-hidden="true"></div>
+          <div class="cinematic-grain" aria-hidden="true"></div>
+          <div class="cinematic-frame">
+            <span class="frame-num">Nº 10</span>
+            <span class="frame-line"></span>
+            <span class="frame-label">Match Night, 2026</span>
+          </div>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ─────────── TOP DA SEMANA ─────────── -->
+    <section class="section" id="hoje">
+      <header class="section-head">
+        <div class="section-head-left">
+          <span class="section-num">02</span>
+          <h2 class="section-title">Top da semana</h2>
+        </div>
+        <div class="section-head-right">
+          <span class="section-cat" id="section-cat-label">Mundo</span>
+          <a href="#arquivo" class="section-link">Ver arquivo <span aria-hidden="true">→</span></a>
+        </div>
+      </header>
+
+      <div class="top-grid" id="top-grid">
+        <!-- skeleton placeholders -->
+        <article class="skel"></article>
+        <article class="skel"></article>
+        <article class="skel"></article>
+        <article class="skel"></article>
+      </div>
+    </section>
+
+    <!-- ─────────── REDDIT (RESENHA DA TORCIDA) ─────────── -->
+    <section class="section" id="resenha">
+      <header class="section-head">
+        <div class="section-head-left">
+          <span class="section-num">03</span>
+          <h2 class="section-title">Resenha da Torcida</h2>
+        </div>
+        <div class="section-head-right">
+          <span class="section-meta">Voz da Arquibancada (Reddit)</span>
+        </div>
+      </header>
+
+      <div class="reddit-grid" id="reddit-grid">
+        <!-- skeleton placeholders -->
+        <article class="skel skel-reddit"></article>
+        <article class="skel skel-reddit"></article>
+        <article class="skel skel-reddit"></article>
+      </div>
+    </section>
+
+    <!-- ─────────── ARQUIVO ─────────── -->
+    <section class="section" id="arquivo">
+      <header class="section-head">
+        <div class="section-head-left">
+          <span class="section-num">04</span>
+          <h2 class="section-title">Arquivo</h2>
+        </div>
+        <div class="section-head-right">
+          <span class="section-meta">últimas semanas</span>
+        </div>
+      </header>
+
+      <div class="archive-list" id="archive-list">
+        <article class="skel skel-row"></article>
+        <article class="skel skel-row"></article>
+      </div>
+    </section>
+
+    <!-- ─────────── SOBRE ─────────── -->
+    <section class="section about" id="sobre">
+      <header class="section-head">
+        <div class="section-head-left">
+          <span class="section-num">05</span>
+          <h2 class="section-title">Sobre</h2>
+        </div>
+      </header>
+
+      <div class="about-grid">
+        <p class="about-lede">
+          <em>Zona Mista</em> é um portal inteligente de curadoria que varre a internet, portais esportivos e comunidades do futebol diariamente para sintetizar as histórias que realmente importam — sem enxurrada de links, clickbait ou polêmicas vazias.
+        </p>
+        <p class="about-fine">
+          Nosso bot coleta e filtra as manchetes de manhã cedo, organiza o arquivo histórico para consulta e extrai as discussões mais quentes da arquibancada diretamente para você.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-foot">
+    <div class="footer-cta">
+      <div class="cta-card">
+        <h3>Receba a Zona Mista no Telegram</h3>
+        <p>A curadoria definitiva do futebol brasileiro e internacional direto no seu celular, sem anúncios e 100% gratuita.</p>
+        <form class="cta-form" onsubmit="event.preventDefault(); alert('Você foi inscrito com sucesso no canal do Telegram (Simulado)!');">
+          <input type="email" placeholder="Seu melhor e-mail..." required>
+          <button type="submit">Acessar Canal</button>
+        </form>
+      </div>
+    </div>
+    <div class="foot-row">
+      <span class="foot-brand">ZONAMISTA<span class="brand-dot">.</span></span>
+      <span class="foot-cred">curadoria automatizada · 2026</span>
+    </div>
+  </footer>
+
+  <!-- Mobile bottom nav -->
+  <nav class="mobile-nav" aria-label="Navegação móvel">
+    <a href="#hero" class="mnav-link active" data-target="hero">Hoje</a>
+    <a href="#resenha" class="mnav-link" data-target="resenha">Resenha</a>
+    <a href="#arquivo" class="mnav-link" data-target="arquivo">Arquivo</a>
+    <a href="#sobre" class="mnav-link" data-target="sobre">Sobre</a>
+  </nav>
+
+  <script src="app.js"></script>
+</body>
+</html>

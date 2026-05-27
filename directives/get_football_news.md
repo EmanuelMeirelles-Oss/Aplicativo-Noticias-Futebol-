@@ -9,10 +9,10 @@
 **Outputs**:
 - `logs/automation.log`: detailed step-by-step logs of the automation execution.
 - `.tmp/football_news.json`: Intermediate data extracted from the feeds.
-- `site/data.json`: The historical record of all news, with the current week at the top.
-- `site/index.html`, `site/app.css`, `site/app.js`: Static SPA to visualize the data.
+- `frontend/data.json`: The historical record of all news, with the current week at the top.
+- `frontend/index.html`, `frontend/app.css`, `frontend/app.js`: Static SPA to visualize the data.
 
-**Execution Script**: `execution/football_news_bot.py`
+**Execution Script**: `scripts/football_news_bot.py`
 
 **Edge Cases**:
 - RSS Feed parsing errors should be logged correctly.

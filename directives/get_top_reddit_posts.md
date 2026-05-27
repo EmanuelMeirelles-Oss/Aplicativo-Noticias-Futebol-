@@ -10,7 +10,7 @@
 - A JSON file in `.tmp/top_reddit_posts.json` containing the post titles, scores, and URLs.
 - Terminal output with a formatted list.
 
-**Execution Script**: `execution/get_reddit_posts.py`
+**Execution Script**: `scripts/get_reddit_posts.py`
 
 **Edge Cases**:
 - Reddit blocks default HTTP client user-agents. Use a custom realistic User-Agent.

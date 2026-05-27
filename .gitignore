@@ -1,0 +1,4 @@
+# Ignorar arquivos temporários e zips
+app_futebol.zip
+.superpowers/
+frontend-legado/
