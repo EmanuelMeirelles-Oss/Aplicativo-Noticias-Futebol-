@@ -48,9 +48,30 @@ async function loadData() {
     state.data = await res.json();
   } catch (err) {
     console.error('Falha ao carregar data.json:', err);
-    state.data = { current_world: [], current_brazil: [], history_world: [], history_brazil: [], reddit_posts: [] };
+    state.data = { current_world: [], current_brazil: [], history_world: [], history_brazil: [], reddit_posts: [], match_ticker: [] };
   }
   render();
+}
+
+function renderTicker(matches) {
+  const container = $('#ticker-content');
+  if (!container) return;
+  container.innerHTML = '';
+  
+  const list = matches && matches.length ? matches : [
+    "BRASILEIRÃO: Flamengo 2 × 1 Corinthians (Encerrado)",
+    "LALIGA: Real Madrid 2 × 0 Real Betis (Encerrado)",
+    "PREMIER LEAGUE: Chelsea 1 × 1 Crystal Palace (Encerrado)"
+  ];
+  
+  const loopedList = [...list, ...list, ...list];
+  
+  loopedList.forEach((match) => {
+    const item = document.createElement('div');
+    item.className = 'ticker-item';
+    item.textContent = match;
+    container.appendChild(item);
+  });
 }
 
 /* ───── Render ───── */
@@ -63,6 +84,7 @@ function render() {
   renderHero(items[0]);
   renderTopGrid(items.slice(1, 5));
   renderReddit(state.data.reddit_posts || []);
+  renderTicker(state.data.match_ticker || []);
   renderArchive(history.slice(0, 12));
   renderCategoryLabel();
 }
