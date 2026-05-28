@@ -2,3 +2,6 @@
 app_futebol.zip
 .superpowers/
 frontend-legado/
+.tmp/
+.claude/
+

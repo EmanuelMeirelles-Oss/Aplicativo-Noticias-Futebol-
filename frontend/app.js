@@ -264,10 +264,183 @@ function wireTopNav() {
   sections.forEach(s => obs.observe(s));
 }
 
+/* ───── Lógica do Chute a Gol (Pênalti) ───── */
+function wirePenaltyGame() {
+  const goalsEl = $('#score-goals');
+  const savesEl = $('#score-saves');
+  const kickBtn = $('#kick-button');
+  const ball = $('#soccer-ball');
+  const gk = $('#gk-player');
+  const resultOverlay = $('#game-result');
+  const resultTitle = $('#result-title');
+  const resultText = $('#result-text');
+  const resetBtn = $('#reset-score');
+  const aimButtons = $$('.aim-btn');
+
+  let currentAim = 'center';
+  let isKicking = false;
+
+  // Carregar placar do localStorage
+  let score = {
+    goals: parseInt(localStorage.getItem('zm_goals') || '0', 10),
+    saves: parseInt(localStorage.getItem('zm_saves') || '0', 10)
+  };
+
+  function updateScoreboard() {
+    if (goalsEl) goalsEl.textContent = score.goals;
+    if (savesEl) savesEl.textContent = score.saves;
+  }
+
+  updateScoreboard();
+
+  // Selecionar mira do chute
+  aimButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (isKicking) return;
+      aimButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentAim = btn.dataset.aim;
+    });
+  });
+
+  // Função para criar partículas de comemoração (Confetes de Gol)
+  function createConfetti() {
+    const pitch = $('.game-pitch');
+    if (!pitch) return;
+    const colors = ['#00ff87', '#3B82F6', '#FF4D4D', '#ffdc96', '#ffffff'];
+    for (let i = 0; i < 45; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const angle = Math.random() * Math.PI * 2;
+      const velocity = 60 + Math.random() * 160;
+      const x = Math.cos(angle) * velocity;
+      const y = -120 - Math.random() * 160;
+      
+      p.style.setProperty('--x', `${x}px`);
+      p.style.setProperty('--y', `${y}px`);
+      p.style.background = colors[Math.floor(Math.random() * colors.length)];
+      
+      p.style.left = '50%';
+      p.style.top = '25%';
+      pitch.appendChild(p);
+      
+      setTimeout(() => p.remove(), 1200);
+    }
+  }
+
+  // Lógica de chute
+  kickBtn.addEventListener('click', () => {
+    if (isKicking) return;
+    isKicking = true;
+    kickBtn.disabled = true;
+
+    // Decidir ação do goleiro
+    const options = ['left', 'center', 'right'];
+    const gkChoice = options[Math.floor(Math.random() * options.length)];
+
+    // Limpar estados anteriores
+    gk.classList.remove('dive-left', 'dive-right', 'dive-center');
+    ball.style.transform = 'none';
+
+    // Animar mergulho do goleiro após breve reação
+    setTimeout(() => {
+      gk.classList.add(`dive-${gkChoice}`);
+    }, 120);
+
+    // Calcular translação
+    let targetX = 0;
+    let targetY = -240;
+    
+    const isMobile = window.innerWidth <= 768;
+    const scaleFactor = isMobile ? 0.75 : 1.0;
+    
+    if (currentAim === 'left') targetX = -65 * scaleFactor;
+    if (currentAim === 'right') targetX = 65 * scaleFactor;
+    if (isMobile) targetY = -180;
+
+    // Chutar bola
+    ball.style.transform = `translate3d(${targetX}px, ${targetY}px, 0) scale(0.58) rotate(720deg)`;
+
+    // Processar resultado (tempo de voo da bola = 800ms)
+    setTimeout(() => {
+      const isGoal = currentAim !== gkChoice;
+
+      if (isGoal) {
+        score.goals++;
+        localStorage.setItem('zm_goals', score.goals);
+        
+        resultOverlay.className = 'result-overlay goal-effect';
+        resultTitle.textContent = 'GOOOOL! ⚽';
+        
+        const goalMsgs = [
+          'No ângulo! Golaço!',
+          'Chute indefensável!',
+          'Direto na gaveta!',
+          'Com muita categoria!',
+          'Fuzilou a rede!'
+        ];
+        resultText.textContent = goalMsgs[Math.floor(Math.random() * goalMsgs.length)];
+        createConfetti();
+
+        // Faz a trave tremer
+        const goalPost = $('.goal-post');
+        if (goalPost) {
+          goalPost.classList.add('net-shake');
+          setTimeout(() => goalPost.classList.remove('net-shake'), 500);
+        }
+      } else {
+        score.saves++;
+        localStorage.setItem('zm_saves', score.saves);
+        
+        resultOverlay.className = 'result-overlay save-effect';
+        resultTitle.textContent = 'DEFENDEU! 🧤';
+        
+        const saveMsgs = [
+          'Defesa espetacular do goleiro!',
+          'Espalmou para longe!',
+          'Goleiro buscou no cantinho!',
+          'Paredão intransponível!',
+          'Sem moleza pro batedor!'
+        ];
+        resultText.textContent = saveMsgs[Math.floor(Math.random() * saveMsgs.length)];
+        
+        // Efeito físico: rebote da defesa
+        ball.style.transform = `translate3d(${targetX * 1.15}px, ${targetY + 40}px, 0) scale(0.72) rotate(480deg)`;
+      }
+
+      updateScoreboard();
+      resultOverlay.classList.remove('hidden');
+
+      // Resetar estados
+      setTimeout(() => {
+        resultOverlay.classList.add('hidden');
+        gk.classList.remove('dive-left', 'dive-right', 'dive-center');
+        ball.style.transform = 'none';
+        isKicking = false;
+        kickBtn.disabled = false;
+      }, 2500);
+
+    }, 800);
+  });
+
+  // Zerar placar
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      score.goals = 0;
+      score.saves = 0;
+      localStorage.setItem('zm_goals', '0');
+      localStorage.setItem('zm_saves', '0');
+      updateScoreboard();
+    });
+  }
+}
+
 /* ───── Boot ───── */
 document.addEventListener('DOMContentLoaded', () => {
   wireCategoryToggle();
   wireMobileNav();
   wireTopNav();
+  wirePenaltyGame();
   loadData();
 });
+

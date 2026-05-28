@@ -32,6 +32,7 @@
 
     <nav class="topnav">
       <a href="#hoje" class="topnav-link active">Hoje</a>
+      <a href="#penalty-game" class="topnav-link">Chute a Gol</a>
       <a href="#resenha" class="topnav-link">Resenha</a>
       <a href="#arquivo" class="topnav-link">Arquivo</a>
       <a href="#sobre" class="topnav-link">Sobre</a>
@@ -92,11 +93,78 @@
       </div>
     </section>
 
+    <!-- ─────────── DESAFIO DE PÊNALTI ─────────── -->
+    <section class="section" id="penalty-game">
+      <header class="section-head">
+        <div class="section-head-left">
+          <span class="section-num">02</span>
+          <h2 class="section-title">Chute a Gol</h2>
+        </div>
+        <div class="section-head-right">
+          <div class="score-board">
+            <span class="score-label">Gols:</span>
+            <span class="score-val" id="score-goals">0</span>
+            <span class="score-sep">|</span>
+            <span class="score-label">Defesas:</span>
+            <span class="score-val" id="score-saves">0</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="game-container">
+        <div class="game-pitch">
+          <!-- Campo de futebol com marcações e trave -->
+          <div class="pitch-lines">
+            <div class="penalty-area"></div>
+            <div class="penalty-spot"></div>
+          </div>
+          
+          <div class="goal-post">
+            <div class="goal-net">
+              <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="width:100%;height:100%;opacity:0.15;stroke:var(--ink-3);stroke-width:1.5;fill:none;">
+                <pattern id="net-pattern" width="10" height="10" patternUnits="userSpaceOnUse">
+                  <path d="M 10 0 L 0 10 M 0 0 L 10 10" />
+                </pattern>
+                <rect width="100" height="100" fill="url(#net-pattern)" />
+              </svg>
+            </div>
+            <div class="goalkeeper" id="gk-player">
+              <span class="gk-hands">🧤</span>
+              <span class="gk-body">👕</span>
+            </div>
+          </div>
+
+          <div class="ball-container">
+            <div class="soccer-ball" id="soccer-ball">⚽</div>
+          </div>
+
+          <!-- Overlay de resultado do chute -->
+          <div class="result-overlay hidden" id="game-result">
+            <div class="result-content">
+              <h3 id="result-title">GOOOOL!</h3>
+              <p id="result-text">No ângulo!</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="game-controls">
+          <div class="control-eyebrow">Escolha a mira do chute:</div>
+          <div class="aim-selector">
+            <button class="aim-btn" data-aim="left">Canto Esquerdo</button>
+            <button class="aim-btn active" data-aim="center">No Meio</button>
+            <button class="aim-btn" data-aim="right">Canto Direito</button>
+          </div>
+          <button class="kick-btn" id="kick-button">CHUTAR! ⚡</button>
+          <button class="reset-score-btn" id="reset-score">Zerar Placar</button>
+        </div>
+      </div>
+    </section>
+
     <!-- ─────────── TOP DA SEMANA ─────────── -->
     <section class="section" id="hoje">
       <header class="section-head">
         <div class="section-head-left">
-          <span class="section-num">02</span>
+          <span class="section-num">03</span>
           <h2 class="section-title">Top da semana</h2>
         </div>
         <div class="section-head-right">
@@ -118,7 +186,7 @@
     <section class="section" id="resenha">
       <header class="section-head">
         <div class="section-head-left">
-          <span class="section-num">03</span>
+          <span class="section-num">04</span>
           <h2 class="section-title">Resenha da Torcida</h2>
         </div>
         <div class="section-head-right">
@@ -138,7 +206,7 @@
     <section class="section" id="arquivo">
       <header class="section-head">
         <div class="section-head-left">
-          <span class="section-num">04</span>
+          <span class="section-num">05</span>
           <h2 class="section-title">Arquivo</h2>
         </div>
         <div class="section-head-right">
@@ -156,7 +224,7 @@
     <section class="section about" id="sobre">
       <header class="section-head">
         <div class="section-head-left">
-          <span class="section-num">05</span>
+          <span class="section-num">06</span>
           <h2 class="section-title">Sobre</h2>
         </div>
       </header>
@@ -194,6 +262,7 @@
   <!-- Mobile bottom nav -->
   <nav class="mobile-nav" aria-label="Navegação móvel">
     <a href="#hero" class="mnav-link active" data-target="hero">Hoje</a>
+    <a href="#penalty-game" class="mnav-link" data-target="penalty-game">Chute</a>
     <a href="#resenha" class="mnav-link" data-target="resenha">Resenha</a>
     <a href="#arquivo" class="mnav-link" data-target="arquivo">Arquivo</a>
     <a href="#sobre" class="mnav-link" data-target="sobre">Sobre</a>
