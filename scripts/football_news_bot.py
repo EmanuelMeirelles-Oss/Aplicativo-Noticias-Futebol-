@@ -1,4 +1,4 @@
-import os
+﻿import os
 import json
 import urllib.request
 import xml.etree.ElementTree as ET
@@ -36,7 +36,7 @@ def fetch_rss(url, limit=5):
     req = urllib.request.Request(url, headers=headers)
     
     try:
-        with urllib.request.urlopen(req) as response:
+        with urllib.request.urlopen(req, timeout=3.5) as response:
             xml_data = response.read()
             
         root = ET.fromstring(xml_data)
@@ -47,7 +47,6 @@ def fetch_rss(url, limit=5):
             link = item.find('link').text if item.find('link') is not None else ''
             pubDate = item.find('pubDate').text if item.find('pubDate') is not None else ''
             
-            # Formatar a data se houver (opcional) - O Google News tem data em formato padrão
             news_items.append({
                 'title': title,
                 'description': '', # Cleaning description to keep UI clean
@@ -71,7 +70,7 @@ def fetch_reddit_posts(subreddit="futebol", limit=5):
     }
     req = urllib.request.Request(url, headers=headers)
     try:
-        with urllib.request.urlopen(req, timeout=8) as response:
+        with urllib.request.urlopen(req, timeout=3.5) as response:
             xml_data = response.read()
             
         root = ET.fromstring(xml_data)
@@ -116,6 +115,7 @@ def fetch_reddit_posts(subreddit="futebol", limit=5):
 def fetch_match_scores():
     logger.info("Buscando placares reais dos jogos recentes/agendados...")
     leagues = {
+        "Copa do Mundo": "fifa.world",
         "Brasileirão": "bra.1",
         "Premier League": "eng.1",
         "LaLiga": "esp.1",
@@ -129,10 +129,10 @@ def fetch_match_scores():
         headers = {'User-Agent': 'Mozilla/5.0'}
         req = urllib.request.Request(url, headers=headers)
         try:
-            with urllib.request.urlopen(req, timeout=5) as response:
+            with urllib.request.urlopen(req, timeout=3.5) as response:
                 data = json.loads(response.read().decode('utf-8'))
             events = data.get('events', [])
-            # Pegar no máximo 3 jogos por liga
+            # Pegar no maximo 3 jogos por liga
             for event in events[:3]:
                 name = event.get('name')
                 status_obj = event.get('status', {})
@@ -158,16 +158,16 @@ def fetch_match_scores():
                     if detail == 'FT' or state == 'post':
                         status_str = "Encerrado"
                     elif state == 'in':
-                        status_str = f"Ao Vivo · {detail}"
+                        status_str = f"Ao Vivo • {detail}"
                     else:
                         status_str = detail
                         
                     if state in ('in', 'post'):
                         home_score = home_team.get('score', '0')
                         away_score = away_team.get('score', '0')
-                        match_str = f"{league_name.upper()}: {home_name} {home_score} × {away_score} {away_name} ({status_str})"
+                        match_str = f"{league_name.upper()}: {home_name} {home_score} — {away_score} {away_name} ({status_str})"
                     else:
-                        match_str = f"{league_name.upper()}: {home_name} × {away_name} ({status_str})"
+                        match_str = f"{league_name.upper()}: {home_name} — {away_name} ({status_str})"
                     
                     match_list.append(match_str)
         except Exception as e:
@@ -175,9 +175,9 @@ def fetch_match_scores():
             
     if not match_list:
         match_list = [
-            "BRASILEIRÃO: Flamengo 2 × 1 Corinthians (Encerrado)",
-            "LALIGA: Real Madrid 2 × 0 Real Betis (Encerrado)",
-            "PREMIER LEAGUE: Chelsea 1 × 1 Crystal Palace (Encerrado)"
+            "COPA DO MUNDO: Brasil 2 — 0 Sérvia (Encerrado)",
+            "COPA DO MUNDO: Argentina 1 — 2 Arábia Saudita (Encerrado)",
+            "COPA DO MUNDO: França 4 — 1 Austrália (Encerrado)"
         ]
         
     return match_list
@@ -185,7 +185,7 @@ def fetch_match_scores():
 def fetch_all_news():
     logger.info("Buscando as maiores notícias de futebol do Brasil e do Mundo...")
     
-    # URL do Google News em Português
+    # URL do Google News em Portugues
     url_world = "https://news.google.com/rss/search?q=futebol+internacional&hl=pt-BR&gl=BR&ceid=BR:pt-419"
     url_brazil = "https://news.google.com/rss/search?q=futebol+brasileiro&hl=pt-BR&gl=BR&ceid=BR:pt-419"
 

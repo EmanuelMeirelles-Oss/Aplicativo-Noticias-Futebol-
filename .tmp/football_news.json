@@ -66,43 +66,45 @@
     "reddit": [
         {
             "title": "Como os três países anfitriões da copa estão recebendo os visitantes",
-            "score": 656,
+            "score": 642,
             "url": "https://old.reddit.com/r/futebol/comments/1u20xqo/como_os_três_países_anfitriões_da_copa_estão/",
             "date": "2026-06-10T12:34:57+00:00"
         },
         {
-            "title": "Sofia Miranda estava numa transmissão da GETV com os mariachis quando, de repente, um deles saca um revólver do bolso",
-            "score": 570,
-            "url": "https://old.reddit.com/r/futebol/comments/1u1yvl7/sofia_miranda_estava_numa_transmissão_da_getv_com/",
-            "date": "2026-06-10T10:59:06+00:00"
-        },
-        {
             "title": "Recepção ao árbitro Omar Artan na Somália após ser repatriado pelos EUA",
-            "score": 496,
+            "score": 570,
             "url": "https://old.reddit.com/r/futebol/comments/1u2bvc6/recepção_ao_árbitro_omar_artan_na_somália_após/",
             "date": "2026-06-10T19:14:07+00:00"
         },
         {
+            "title": "Sofia Miranda estava numa transmissão da GETV com os mariachis quando, de repente, um deles saca um revólver do bolso",
+            "score": 477,
+            "url": "https://old.reddit.com/r/futebol/comments/1u1yvl7/sofia_miranda_estava_numa_transmissão_da_getv_com/",
+            "date": "2026-06-10T10:59:06+00:00"
+        },
+        {
             "title": "Nossa esperança não sabe nem treinar 🥲",
-            "score": 414,
+            "score": 420,
             "url": "https://old.reddit.com/r/futebol/comments/1u256d9/nossa_esperança_não_sabe_nem_treinar/",
             "date": "2026-06-10T15:18:15+00:00"
         },
         {
             "title": "Assistindo um jogo da seleção em 2002 às 03 da manhã | Brasil 2 x 1 Inglaterra | @thiagomonteirofoto",
-            "score": 297,
+            "score": 309,
             "url": "https://old.reddit.com/r/futebol/comments/1u1zo2v/assistindo_um_jogo_da_seleção_em_2002_às_03_da/",
             "date": "2026-06-10T11:37:56+00:00"
         }
     ],
     "ticker": [
-        "BRASILEIRÃO: Bragantino 3 × 1 Internacional (Encerrado)",
-        "BRASILEIRÃO: Palmeiras 1 × 0 Chapecoense (Encerrado)",
-        "BRASILEIRÃO: Vasco 0 × 1 Atlético-MG (Encerrado)",
-        "PREMIER LEAGUE: Brighton 0 × 3 Man United (Encerrado)",
-        "PREMIER LEAGUE: Burnley 1 × 1 Wolves (Encerrado)",
-        "PREMIER LEAGUE: C Palace 1 × 2 Arsenal (Encerrado)",
-        "LALIGA: Villarreal 5 × 1 Atlético (Encerrado)",
-        "CHAMPIONS: PSG 1 × 1 Arsenal (Encerrado)"
+        "COPA DO MUNDO: Mexico — South Africa (Thu, June 11th at 3:00 PM EDT)",
+        "COPA DO MUNDO: South Korea — Czechia (Thu, June 11th at 10:00 PM EDT)",
+        "BRASILEIRÃO: Bragantino 3 — 1 Internacional (Encerrado)",
+        "BRASILEIRÃO: Palmeiras 1 — 0 Chapecoense (Encerrado)",
+        "BRASILEIRÃO: Vasco 0 — 1 Atlético-MG (Encerrado)",
+        "PREMIER LEAGUE: Brighton 0 — 3 Man United (Encerrado)",
+        "PREMIER LEAGUE: Burnley 1 — 1 Wolves (Encerrado)",
+        "PREMIER LEAGUE: C Palace 1 — 2 Arsenal (Encerrado)",
+        "LALIGA: Villarreal 5 — 1 Atlético (Encerrado)",
+        "CHAMPIONS: PSG 1 — 1 Arsenal (Encerrado)"
     ]
 }

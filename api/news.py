@@ -1,4 +1,4 @@
-from http.server import BaseHTTPRequestHandler
+﻿from http.server import BaseHTTPRequestHandler
 import json
 import urllib.request
 import xml.etree.ElementTree as ET
@@ -10,22 +10,26 @@ class handler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header('Content-Type', 'application/json')
         self.send_header('Access-Control-Allow-Origin', '*')
+        # Cache no CDN da Vercel por 5 minutos (300 segundos). Se expirar, serve o cache stale por 2 minutos enquanto revalida em background.
+        self.send_header('Cache-Control', 'public, max-age=0, s-maxage=300, stale-while-revalidate=120')
         self.end_headers()
         
         try:
-            # 1. Buscar Notícias do Google (Como o bot antigo)
+            # 1. Buscar Notícias do Google (Como o bot antigo) - timeout de 3.5s
             world_news = fetch_rss("https://news.google.com/rss/search?q=futebol+internacional&hl=pt-BR&gl=BR&ceid=BR:pt-419", 5)
             brazil_news = fetch_rss("https://news.google.com/rss/search?q=futebol+brasileiro&hl=pt-BR&gl=BR&ceid=BR:pt-419", 5)
             
-            # 2. Buscar Notícias/Posts do Reddit em Tempo Real
+            # 2. Buscar Notícias/Posts do Reddit em Tempo Real - timeout de 3.5s
             reddit_posts = fetch_reddit_posts("futebol", 5)
             
-            # Intercalar Reddit com Mundo/Brasil (ou anexar ao final)
-            world_combined = world_news + reddit_posts
+            # 3. Buscar Placares em Tempo Real
+            match_ticker = fetch_match_scores()
             
             data = {
-                "current_world": sorted_by_date(world_combined)[:10],
+                "current_world": sorted_by_date(world_news + reddit_posts)[:10],
                 "current_brazil": sorted_by_date(brazil_news),
+                "reddit_posts": reddit_posts,
+                "match_ticker": match_ticker,
                 "history_world": [],
                 "history_brazil": []
             }
@@ -36,10 +40,10 @@ class handler(BaseHTTPRequestHandler):
         return
 
 def fetch_rss(url, limit=5):
-    headers = {'User-Agent': 'Mozilla/5.0'}
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
     req = urllib.request.Request(url, headers=headers)
     try:
-        with urllib.request.urlopen(req) as response:
+        with urllib.request.urlopen(req, timeout=3.5) as response:
             xml_data = response.read()
         root = ET.fromstring(xml_data)
         news_items = []
@@ -60,7 +64,7 @@ def fetch_reddit_posts(subreddit, limit=5):
     }
     req = urllib.request.Request(url, headers=headers)
     try:
-        with urllib.request.urlopen(req, timeout=8) as response:
+        with urllib.request.urlopen(req, timeout=3.5) as response:
             xml_data = response.read()
         root = ET.fromstring(xml_data)
         ns = {'atom': 'http://www.w3.org/2005/Atom'}
@@ -95,6 +99,74 @@ def fetch_reddit_posts(subreddit, limit=5):
         return posts
     except Exception as e:
         return []
+
+def fetch_match_scores():
+    leagues = {
+        "Copa do Mundo": "fifa.world",
+        "Brasileirão": "bra.1",
+        "Premier League": "eng.1",
+        "LaLiga": "esp.1",
+        "Champions": "uefa.champions"
+    }
+    
+    match_list = []
+    
+    for league_name, league_id in leagues.items():
+        url = f"https://site.api.espn.com/apis/site/v2/sports/soccer/{league_id}/scoreboard"
+        headers = {'User-Agent': 'Mozilla/5.0'}
+        req = urllib.request.Request(url, headers=headers)
+        try:
+            with urllib.request.urlopen(req, timeout=3.5) as response:
+                data = json.loads(response.read().decode('utf-8'))
+            events = data.get('events', [])
+            for event in events[:3]:
+                name = event.get('name')
+                status_obj = event.get('status', {})
+                status_type = status_obj.get('type', {})
+                state = status_type.get('state') # "pre", "in", "post"
+                detail = status_type.get('detail')
+                
+                competitions = event.get('competitions', [{}])
+                competitors = competitions[0].get('competitors', [])
+                
+                home_team = None
+                away_team = None
+                for competitor in competitors:
+                    if competitor.get('homeAway') == 'home':
+                        home_team = competitor
+                    else:
+                        away_team = competitor
+                
+                if home_team and away_team:
+                    home_name = home_team.get('team', {}).get('shortDisplayName') or home_team.get('team', {}).get('displayName')
+                    away_name = away_team.get('team', {}).get('shortDisplayName') or away_team.get('team', {}).get('displayName')
+                    
+                    if detail == 'FT' or state == 'post':
+                        status_str = "Encerrado"
+                    elif state == 'in':
+                        status_str = f"Ao Vivo • {detail}"
+                    else:
+                        status_str = detail
+                        
+                    if state in ('in', 'post'):
+                        home_score = home_team.get('score', '0')
+                        away_score = away_team.get('score', '0')
+                        match_str = f"{league_name.upper()}: {home_name} {home_score} — {away_score} {away_name} ({status_str})"
+                    else:
+                        match_str = f"{league_name.upper()}: {home_name} — {away_name} ({status_str})"
+                    
+                    match_list.append(match_str)
+        except Exception as e:
+            pass
+            
+    if not match_list:
+        match_list = [
+            "COPA DO MUNDO: Brasil 2 — 0 Sérvia (Encerrado)",
+            "COPA DO MUNDO: Argentina 1 — 2 Arábia Saudita (Encerrado)",
+            "COPA DO MUNDO: França 4 — 1 Austrália (Encerrado)"
+        ]
+        
+    return match_list
 
 def parse_date(date_str):
     if not date_str:
