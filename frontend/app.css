@@ -95,11 +95,90 @@ main, header, footer, nav, section { position: relative; z-index: 1; }
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(8, 9, 12, 0.82);
+  background: var(--bg-topbar, rgba(8, 9, 12, 0.82));
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border);
   transition: all 0.3s var(--ease);
+}
+
+/* ============================================================
+   COLOR ACCENT THEMES (TONS)
+   ============================================================ */
+body {
+  transition: background 0.5s var(--ease), color 0.5s var(--ease);
+}
+
+body.theme-neon {
+  --amber:        #00ff87; /* Emerald Green Neon */
+  --amber-glow:   rgba(0, 255, 135, 0.35);
+  --amber-soft:   rgba(0, 255, 135, 0.06);
+}
+
+body.theme-cyber {
+  --amber:        #a855f7; /* Electric Purple */
+  --amber-glow:   rgba(168, 85, 247, 0.35);
+  --amber-soft:   rgba(168, 85, 247, 0.06);
+}
+
+body.theme-retro {
+  --bg:           #f4f4f5; /* Light paper */
+  --bg-elev:      #ffffff;
+  --ink:          #09090b;
+  --ink-2:        #27272a;
+  --ink-3:        #71717a;
+  --ink-4:        #a1a1aa;
+  --border:       rgba(0, 0, 0, 0.08);
+  --border-hi:    rgba(0, 0, 0, 0.16);
+  --amber:        #18181b; /* Editorial Black */
+  --amber-glow:   rgba(24, 24, 27, 0.15);
+  --amber-soft:   rgba(24, 24, 27, 0.03);
+  --bg-topbar:    rgba(244, 244, 245, 0.82);
+}
+
+/* Tone Selector styles */
+.tone-selector {
+  display: flex;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 4px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  align-items: center;
+  margin: 0 12px;
+  transition: all 0.3s var(--ease);
+}
+
+body.theme-retro .tone-selector {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.tone-btn {
+  background: transparent;
+  border: none;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.95rem;
+  transition: all 0.2s var(--ease);
+}
+
+.tone-btn:hover {
+  transform: scale(1.18);
+}
+
+.tone-btn.active {
+  background: var(--border-hi);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+body.theme-retro .tone-btn.active {
+  background: rgba(0, 0, 0, 0.08);
 }
 
 .brand {

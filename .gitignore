@@ -5,3 +5,8 @@ frontend-legado/
 .tmp/
 .claude/
 
+
+__pycache__/
+*.pyc
+.vercel/
+.env

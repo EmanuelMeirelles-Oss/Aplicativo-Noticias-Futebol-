@@ -42,14 +42,55 @@ function extractSource(title) {
 
 /* ───── Data load ───── */
 async function loadData() {
+  let loaded = false;
+  
+  // 1. Tenta carregar do endpoint dinâmico /api/news (tempo limite de 3.5s)
   try {
-    const res = await fetch('data.json', { cache: 'no-store' });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    state.data = await res.json();
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3500);
+    
+    console.log('Tentando carregar notícias dinâmicas de /api/news...');
+    const res = await fetch('/api/news', { 
+      signal: controller.signal,
+      cache: 'no-store' 
+    });
+    clearTimeout(timeoutId);
+    
+    if (res.ok) {
+      const dynamicData = await res.json();
+      if (dynamicData && (dynamicData.current_world || dynamicData.current_brazil)) {
+        state.data = dynamicData;
+        loaded = true;
+        console.log('Notícias dinâmicas carregadas com sucesso de /api/news!');
+      }
+    } else {
+      console.warn(`Endpoint /api/news retornou status: ${res.status}`);
+    }
   } catch (err) {
-    console.error('Falha ao carregar data.json:', err);
-    state.data = { current_world: [], current_brazil: [], history_world: [], history_brazil: [], reddit_posts: [], match_ticker: [] };
+    console.warn('Falha ou timeout ao buscar notícias dinâmicas, usando cache local:', err.name === 'AbortError' ? 'Timeout' : err.message);
   }
+  
+  // 2. Fallback para o cache estático data.json se o dynamic loading falhar
+  if (!loaded) {
+    try {
+      console.log('Carregando cache estático de data.json...');
+      const res = await fetch('data.json', { cache: 'no-store' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      state.data = await res.json();
+      console.log('Cache estático de data.json carregado com sucesso!');
+    } catch (err) {
+      console.error('Falha crítica ao carregar data.json:', err);
+      state.data = { 
+        current_world: [], 
+        current_brazil: [], 
+        history_world: [], 
+        history_brazil: [], 
+        reddit_posts: [], 
+        match_ticker: [] 
+      };
+    }
+  }
+  
   render();
 }
 
@@ -435,12 +476,38 @@ function wirePenaltyGame() {
   }
 }
 
+/* ───── Seletor de Tons/Cores ───── */
+function wireToneSelector() {
+  const buttons = $$('.tone-btn');
+  const savedTone = localStorage.getItem('zm_tone') || 'neon';
+  
+  setTone(savedTone);
+  
+  buttons.forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.tone === savedTone);
+    
+    btn.addEventListener('click', () => {
+      const tone = btn.dataset.tone;
+      setTone(tone);
+      buttons.forEach(b => b.classList.toggle('active', b === btn));
+    });
+  });
+}
+
+function setTone(tone) {
+  const body = document.body;
+  body.classList.remove('theme-neon', 'theme-cyber', 'theme-retro');
+  body.classList.add(`theme-${tone}`);
+  localStorage.setItem('zm_tone', tone);
+}
+
 /* ───── Boot ───── */
 document.addEventListener('DOMContentLoaded', () => {
   wireCategoryToggle();
   wireMobileNav();
   wireTopNav();
   wirePenaltyGame();
+  wireToneSelector();
   loadData();
 });
 
